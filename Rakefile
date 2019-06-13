@@ -7,7 +7,7 @@
 
 # --- Config ---
 
-$project_name = "qstub"
+$project_name = "mediaindex"
 $project_version = "0.1"
 $project_description = "Stub implementation of Qt-based windowing app"
 
