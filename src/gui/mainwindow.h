@@ -13,6 +13,7 @@
 #define _gui_mainwindow_h_installed
 
 #include <QMainWindow>
+#include <QSettings>
 
 /**
  * Qt framework generated user interface classes
@@ -35,9 +36,12 @@ class MainWindow : public QMainWindow
      * 
      * This method sets up all user interface elements for the window.
      * 
+     * \param settings A Qt settings object, for storing persistent
+     * configuration data (e.g. window geometry)
+     * 
      * \param parent The parent UI object (usually `nullptr`)
      */
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QSettings& settings, QWidget *parent = nullptr);
 
     /**
      * \brief Destructor - destroys all user interface elements for this
@@ -45,12 +49,28 @@ class MainWindow : public QMainWindow
      */
     ~MainWindow();
 
+    protected:
+
+    /**
+     * \brief Handle shut-down actions, incuding writing window state and
+     * geometry to persistent storage
+     * 
+     * \param event The event object (passed to base-class implementation) 
+     */
+    virtual void closeEvent(QCloseEvent *event) override;
+
     private:
 
     /**
      * \brief Qt-generated framework for the main window
      */
     Ui::MainWindow *ui;
+
+    /**
+     * \brief A reference to the application-wide setings object that is used
+     * for persistent settings information
+     */
+    QSettings& m_settings;
 
 };  // end MainWindow class
 
