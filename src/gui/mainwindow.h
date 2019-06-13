@@ -85,6 +85,13 @@ class MainWindow : public QMainWindow
      */
     void setupUi(void);
 
+    /**
+     * \brief Set up the central widget and all its components
+     * 
+     * This method is called once during construction.i
+     */
+    void setupCentralWidget(void);
+
     // -- Utilities / Helper Methods --
     //
     // The methods below are implemented in the `mainwindow/mw_utils.cpp`
