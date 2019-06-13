@@ -24,10 +24,17 @@ namespace Ui {
 
 /**
  * \brief The main window of the application
+ * 
+ * For clarity and general code-tidyness, the implementation of this class
+ * has been broken up across several `.cpp` files. Apart from the
+ * `mainwindow.cpp`, the rest of these are found in the `src/mainwindow`
+ * folder.
  */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+    // --- External Interface ---
 
     public:
 
@@ -49,7 +56,11 @@ class MainWindow : public QMainWindow
      */
     ~MainWindow();
 
+    // --- Internal Declarations ---
+
     protected:
+
+    // -- Event Management --
 
     /**
      * \brief Handle shut-down actions, incuding writing window state and
@@ -60,6 +71,36 @@ class MainWindow : public QMainWindow
     virtual void closeEvent(QCloseEvent *event) override;
 
     private:
+
+    // -- UI Setup --
+    //
+    // These methods are implemented in the `mainwindow/mw_setup_ui.cpp`
+    // file.
+    
+    /**
+     * \brief Top-level method for setting up the UI
+     * 
+     * This method is called once from the constructor. All other UI setup /
+     * creation methods are called from here.
+     */
+    void setupUi(void);
+
+    // -- Utilities / Helper Methods --
+    //
+    // The methods below are implemented in the `mainwindow/mw_utils.cpp`
+    // file.
+
+    /**
+     * \brief Save the current window geometry to persistent settings
+     */
+    void saveWindowGeometry(void);
+
+    /**
+     * \brief Retrieve window geometry from persistent settings
+     */
+    void restoreWindowGeometry(void);
+
+    // -- Attributes --
 
     /**
      * \brief Qt-generated framework for the main window
