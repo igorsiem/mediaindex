@@ -29,6 +29,13 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
 {
     setupUi();
     setupActions();
+
+    // Internal signal / slot connections
+    connect(
+        this
+        , &MainWindow::rootDirectoryChanged
+        , this
+        , &MainWindow::handleRootDirectoryChanged);
 }   // end constructor
 
 MainWindow::~MainWindow()

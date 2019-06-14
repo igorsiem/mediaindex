@@ -15,6 +15,7 @@
 #include <QFileSystemModel>
 #include <QMainWindow>
 #include <QSettings>
+#include <QSplitter>
 #include <QTreeView>
 
 #include "error.h"
@@ -91,11 +92,21 @@ class MainWindow : public QMainWindow
      */
     ~MainWindow();
 
+    signals:
+
+    /**
+     * \brief Notify that the root folder has been changed
+     */
+    void rootDirectoryChanged(QString newRootDirectory);    
+
     // --- Internal Declarations ---
 
     protected:
 
-    // -- Event Management --
+    // -- Event Handling --
+    //
+    // These methods are implemented in `mainwindow/mw_events.cpp`. Note
+    // that this includes Qt slot methods as well.
 
     /**
      * \brief Handle shut-down actions, incuding writing window state and
@@ -104,6 +115,16 @@ class MainWindow : public QMainWindow
      * \param event The event object (passed to base-class implementation) 
      */
     virtual void closeEvent(QCloseEvent *event) override;
+
+    protected slots:
+
+    /**
+     * \brief Perform all necessary actions when the root folder has
+     * changed
+     * 
+     * This includes updating the folder tree / model objects.
+     */
+    void handleRootDirectoryChanged(QString newRootDirectory);
 
     private:
 
@@ -123,21 +144,56 @@ class MainWindow : public QMainWindow
     /**
      * \brief Set up the central widget and all its components
      * 
-     * This method is called once during construction.i
+     * This method is called once during construction.
      */
     void setupCentralWidget(void);
+
+    /**
+     * \brief Create the main left/right splitter and its components
+     * 
+     * This method is called once during construction.
+     * 
+     * \return The newly created `QSplitter` object, ready to be inserted
+     * into its parent; note there is no need to reference this object after
+     * it is created, so it is not retained as an attribute of the
+     * `MainWindow`.
+     */
+    QSplitter* createLeftRightSplitter(void);
+
+    /**
+     * \brief Set up the `m_folderTrVw` and `m_folderMdl` objects that manage
+     * the folder tree view
+     * 
+     * This method is called once during construction.
+     */
+    void setupFolderTree(void);
 
     // -- Actions Setup --
     //
     // These methods are implemented in the 'mainwindow/mw_setup_actions.cpp`
     // file.
 
+    /**
+     * \brief Set up the User command actions, and their corresponding
+     * menu items and toolbar buttons
+     * 
+     * This method is called once during construction
+     */
     void setupActions(void);
 
+    /**
+     * \brief Set up the User command actions related to File operations
+     * 
+     * This method is called once during constructions
+     */
     void setupFileActions(void);
 
     // -- Command Execution --
 
+    /**
+     * \brief Execute the User action to open / set the root folder for
+     * browsing
+     */
     void executeFileOpenRootFolderAction(void);
 
     // -- Utilities / Helper Methods --
@@ -189,7 +245,6 @@ class MainWindow : public QMainWindow
     // - User Interface Elements -
 
     QTreeView* m_foldersTrVw;       ///< The tree view for folders
-
     QFileSystemModel* m_foldersMdl; ///< The data model for folders
 
 };  // end MainWindow class

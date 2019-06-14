@@ -1,6 +1,6 @@
 /**
  * \file mw_events.cpp
- * Implement event handlers for the `MainWindow` class
+ * Implement event handlers and slot methods for the `MainWindow` class
  * 
  * \author Igor Siemienowicz
  * 
@@ -16,3 +16,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     saveWindowGeometry();
     QMainWindow::closeEvent(event);
 }   // end closeEvent
+
+void MainWindow::handleRootDirectoryChanged(QString newRootDirectory)
+{
+    m_foldersMdl->setRootPath(newRootDirectory);
+    m_foldersTrVw->setRootIndex(m_foldersMdl->index(newRootDirectory));
+
+    // m_foldersTrVw->expandAll();
+}   // end handleRootDirectoryChanged method

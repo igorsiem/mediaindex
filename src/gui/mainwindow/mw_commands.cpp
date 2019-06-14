@@ -27,12 +27,11 @@ void MainWindow::executeFileOpenRootFolderAction(void)
         if (!newPath.isEmpty())
         {
             saveRootDirectoryPath(newPath);
+            emit rootDirectoryChanged(newPath);
 
             QString msg = tr("Root folder:") + newPath;
             logging::info(msg);
             statusBar()->showMessage(msg, 5000);
-
-            Error(tr("this functionality is not complete yet")).raise();
         }
     }
     ACTION_CATCH_DURING("Opening Root Folder");
