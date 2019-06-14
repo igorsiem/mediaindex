@@ -9,6 +9,7 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
+#include <QStandardPaths>
 #include "../mainwindow.h"
 
 void MainWindow::saveWindowGeometry(void)
@@ -26,3 +27,21 @@ void MainWindow::restoreWindowGeometry(void)
     restoreState(m_settings.value("state").toByteArray());
     m_settings.endGroup();
 }   // end restoreWindowGeometry method
+
+QString MainWindow::rootDirectoryPath(void) const
+{
+    m_settings.beginGroup("Directories");
+    auto p = m_settings.value(
+        "rootDirectoryPath"
+        , QStandardPaths::PicturesLocation);
+    m_settings.endGroup();
+
+    return p.toString();
+}   // end rootDirectoryPath method
+
+void MainWindow::setRootDirectoryPath(QString p)
+{
+    m_settings.beginGroup("Directories");
+    m_settings.setValue("rootDirectoryPath", p);
+    m_settings.endGroup();
+}   // end setRootDirectoryPath method

@@ -153,6 +153,10 @@ class MainWindow : public QMainWindow
      */
     void restoreWindowGeometry(void);
 
+    QString rootDirectoryPath(void) const;
+
+    void setRootDirectoryPath(QString p);
+
     // -- Attributes --
 
     /**

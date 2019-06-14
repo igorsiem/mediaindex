@@ -80,8 +80,7 @@ class Error : public QException
 #define ACTION_CATCH_DURING( actionDesc ) \
     catch (const ::Error& err) \
     { \
-        logging::logger().log(logging::level_t::error, \
-            (QString(actionDesc) + " - " + err.message()).toStdWString()); \
+        logging::error(QString(actionDesc) + " - " + err.message()); \
         QMessageBox::critical( \
             this, \
             actionDesc, \
@@ -90,8 +89,7 @@ class Error : public QException
     catch (const QException&) \
     { \
         QString msg(tr("an unrecognised Qt exception was encountered")); \
-        logging::logger().log(logging::level_t::error, \
-            (QString(actionDesc) + " - " + msg).toStdWString()); \
+        logging::error(QString(actionDesc) + " - " + msg); \
         QMessageBox::critical( \
             this, \
             actionDesc, \
@@ -100,8 +98,7 @@ class Error : public QException
     catch (const std::exception& err) \
     { \
         QString msg(err.what()); \
-        logging::logger().log(logging::level_t::error, \
-            (QString(actionDesc) + " - " + msg).toStdWString()); \
+        logging::error(QString(actionDesc) + " - " + msg); \
         QMessageBox::critical( \
             this, \
             actionDesc, \
@@ -111,8 +108,7 @@ class Error : public QException
     { \
         QString msg(tr("an unrecognised error condition has arisen; the " \
             "operation could not be completed")); \
-        logging::logger().log(logging::level_t::error, \
-            (QString(actionDesc) + " - " + msg).toStdWString()); \
+        logging::error(QString(actionDesc) + " - " + msg); \
         QMessageBox::critical( \
             this, \
             actionDesc, \

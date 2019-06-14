@@ -32,6 +32,18 @@ using level_t = qlib::logger::level_t;
  */
 inline qlib::logger& logger(void) { return qlib::logger::instance(); }
 
+inline void debug(QString msg)
+    { logger().log(level_t::debug, msg.toStdWString()); }
+
+inline void info(QString msg)
+    { logger().log(level_t::info, msg.toStdWString()); }
+
+inline void warning(QString msg)
+    { logger().log(level_t::warning, msg.toStdWString()); }
+
+inline void error(QString msg)
+    { logger().log(level_t::error, msg.toStdWString()); }
+
 /**
  * \brief Set up system logging in accordance with command-line options
  * 

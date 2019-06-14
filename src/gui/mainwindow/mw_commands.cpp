@@ -9,6 +9,8 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
+#include <QFileDialog>
+
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -16,7 +18,23 @@ void MainWindow::executeFileOpenRootFolderAction(void)
 {
     ACTION_TRY
     {
-        Error(tr("this functionality is not implemented yet")).raise();
+        auto newPath = QFileDialog::getExistingDirectory(
+            this
+            , tr("Open Root Folder")
+            , rootDirectoryPath()
+            , QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+        if (!newPath.isEmpty())
+        {
+            setRootDirectoryPath(newPath);
+
+            QString msg = tr("Root folder:") + newPath;
+            logging::info(msg);
+            statusBar()->showMessage(msg, 5000);
+
+            Error(tr("this functionality is not complete yet")).raise();
+        }
+        
     }
     ACTION_CATCH_DURING("Opening Root Folder");
 }   // end executeFileOpenRootFolderAction method

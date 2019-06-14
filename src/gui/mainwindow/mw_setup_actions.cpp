@@ -11,6 +11,7 @@
  */
 
 #include <QAction>
+#include <QIcon>
 #include <QKeySequence>
 
 #include "../logging.h"
@@ -31,19 +32,13 @@ void MainWindow::setupActions(void)
 void MainWindow::setupFileActions(void)
 {
     auto openRootFolderAction =
-        new QAction(tr("&Open Root Folder..."), this);
+        new QAction(QIcon(":/folder"), tr("&Open Root Folder..."), this);
     openRootFolderAction->setShortcut(QKeySequence::StandardKey::Open);
 
     connect(
         openRootFolderAction
         , &QAction::triggered
-        , [this](void)
-        { 
-            logging::logger().log(
-                logging::level_t::debug
-                , L"open root folder called");
-            executeFileOpenRootFolderAction();
-        });
+        , [this](void) {  executeFileOpenRootFolderAction(); });
 
     auto fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openRootFolderAction);
