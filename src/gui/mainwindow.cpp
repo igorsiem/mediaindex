@@ -26,6 +26,7 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     , m_settings(settings)
 {
     setupUi();
+    setupActions();
 }   // end constructor
 
 MainWindow::~MainWindow()

@@ -15,6 +15,8 @@
 #include <QMainWindow>
 #include <QSettings>
 
+#include "error.h"
+
 /**
  * Qt framework generated user interface classes
  */
@@ -37,6 +39,37 @@ class MainWindow : public QMainWindow
     // --- External Interface ---
 
     public:
+
+    /**
+     * \brief Error exception for signalling errors related to this class
+     */
+    class Error : public ::Error
+    {
+        public:
+
+        /**
+         * \brief Constructor, setting the exception object with a QString
+         * 
+         * \param msg The human-readable error message
+         */
+        explicit Error(QString msg) : ::Error(msg) {}
+
+        DECLARE_DEFAULT_VIRTUAL_DESTRUCTOR(Error)
+
+        /**
+         * \brief Throw the error object as an exception
+         */
+        virtual void raise(void) const override { throw *this; }
+
+        /**
+         * \`brief Create a cloned copy of the Error object
+         * 
+         * \return A pointer to a new copy of self, created using `new`
+         */
+        virtual Error* clone(void) const override
+            { return new Error(*this); }
+
+    };  // end Error class
 
     /**
      * \brief Trivial constructor
@@ -91,6 +124,19 @@ class MainWindow : public QMainWindow
      * This method is called once during construction.i
      */
     void setupCentralWidget(void);
+
+    // -- Actions Setup --
+    //
+    // These methods are implemented in the 'mainwindow/mw_setup_actions.cpp`
+    // file.
+
+    void setupActions(void);
+
+    void setupFileActions(void);
+
+    // -- Command Execution --
+
+    void executeFileOpenRootFolderAction(void);
 
     // -- Utilities / Helper Methods --
     //

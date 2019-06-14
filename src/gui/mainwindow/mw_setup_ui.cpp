@@ -20,6 +20,8 @@
 void MainWindow::setupUi(void)
 {
     ui->setupUi(this);
+    setWindowTitle("MediaIndex");
+    
     restoreWindowGeometry();
 
     setupCentralWidget();
@@ -29,6 +31,7 @@ void MainWindow::setupCentralWidget(void)
 {
     new QVBoxLayout(centralWidget());
 
+    // Left / right frames and splitter
     auto leftFrm = new QFrame(this), rightFrm = new QFrame(this);
     leftFrm->setFrameStyle(QFrame::Box);
     rightFrm->setFrameStyle(QFrame::Box);  
