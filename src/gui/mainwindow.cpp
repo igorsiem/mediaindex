@@ -24,6 +24,8 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_settings(settings)
+    , m_foldersTrVw(nullptr)
+    , m_foldersMdl(nullptr)
 {
     setupUi();
     setupActions();

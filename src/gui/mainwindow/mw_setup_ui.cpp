@@ -35,7 +35,26 @@ void MainWindow::setupCentralWidget(void)
     auto leftFrm = new QFrame(this), rightFrm = new QFrame(this);
     leftFrm->setFrameStyle(QFrame::Box);
     rightFrm->setFrameStyle(QFrame::Box);  
+
+    // -- 
     
+    new QVBoxLayout(leftFrm);
+    m_foldersTrVw = new QTreeView(leftFrm);
+    leftFrm->layout()->addWidget(m_foldersTrVw);
+
+    m_foldersMdl = new QFileSystemModel();
+    m_foldersTrVw->setModel(m_foldersMdl);
+
+    auto dirPath = rootDirectoryPath();
+    logging::debug("using dir path: " + dirPath);
+    m_foldersMdl->setRootPath(dirPath);
+    m_foldersTrVw->setRootIndex(m_foldersMdl->index(dirPath));
+
+    m_foldersMdl->setFilter(
+        QDir::Dirs | QDir::AllDirs | QDir::NoDotAndDotDot);
+
+    // ---
+
     auto leftRightSplt = new QSplitter(this);
     leftRightSplt->addWidget(leftFrm);
     leftRightSplt->addWidget(rightFrm);

@@ -39,7 +39,7 @@ QString MainWindow::rootDirectoryPath(void) const
     return p.toString();
 }   // end rootDirectoryPath method
 
-void MainWindow::setRootDirectoryPath(QString p)
+void MainWindow::saveRootDirectoryPath(QString p)
 {
     m_settings.beginGroup("Directories");
     m_settings.setValue("rootDirectoryPath", p);

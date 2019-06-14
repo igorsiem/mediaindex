@@ -12,8 +12,10 @@
 #ifndef _gui_mainwindow_h_installed
 #define _gui_mainwindow_h_installed
 
+#include <QFileSystemModel>
 #include <QMainWindow>
 #include <QSettings>
+#include <QTreeView>
 
 #include "error.h"
 
@@ -153,9 +155,23 @@ class MainWindow : public QMainWindow
      */
     void restoreWindowGeometry(void);
 
+    /**
+     * \brief Retrieve the path of the root folder for the index
+     * 
+     * This is retrieved from persistent user settings. If it has not been
+     * set, the default pictures folder path.
+     * 
+     * \param The path to the root directory for the index
+     */
     QString rootDirectoryPath(void) const;
 
-    void setRootDirectoryPath(QString p);
+    /**
+     * \brief Record the root directory path for the index in persistent
+     * settings storage
+     * 
+     * \param p The path to set
+     */
+    void saveRootDirectoryPath(QString p);
 
     // -- Attributes --
 
@@ -169,6 +185,12 @@ class MainWindow : public QMainWindow
      * for persistent settings information
      */
     QSettings& m_settings;
+
+    // - User Interface Elements -
+
+    QTreeView* m_foldersTrVw;       ///< The tree view for folders
+
+    QFileSystemModel* m_foldersMdl; ///< The data model for folders
 
 };  // end MainWindow class
 

@@ -26,7 +26,7 @@ void MainWindow::executeFileOpenRootFolderAction(void)
 
         if (!newPath.isEmpty())
         {
-            setRootDirectoryPath(newPath);
+            saveRootDirectoryPath(newPath);
 
             QString msg = tr("Root folder:") + newPath;
             logging::info(msg);
