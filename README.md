@@ -1,28 +1,16 @@
-# qStub README
+# MediaIndex README
 
 ## Overview
 
-The *qStub* distribution is a basic implementation of a simple Qt-based
-windowing app to simplify the process of getting a qPrise-style project
-started.
+*MediaIndex* is a simple viewer / indexer for media files (e.g. images, video , audio).
 
-## Usage Notes
-
-Starting a project using *qStub* is simply a matter of copying the files
-in the qStub checkout and updating the "Config" section at the top of the
-Rakefile. There *may* be some fiddling with conan installations (see below),
-but everything should just build 'as is'.
-
-Don't forget to edit this README for your new project!
+**TODO:** *Expand high-level documentation*
 
 ## Build Notes
 
 ### qLib
 
-*qStub* uses *qLib* for several low-level functions, including string
-conversions and logging. Eventually, qLib should be made available as a conan
-package (see below), but for now, it simply needs to be in the same directory as the
-*qStub* checkout (or the project derived from *qStub*).
+The *qLib* library is used for several low-level functions, including string conversions and logging. Eventually, qLib should be made available as a conan package (see below), but for now, it simply needs to be in the same directory as the *MediaIndex* checkout.
 
 ### Conan
 

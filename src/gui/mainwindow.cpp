@@ -20,18 +20,13 @@ using namespace fmt::literals;
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
+    QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , m_settings(settings)
 {
-    ui->setupUi(this);
-
-    // Add a label for the API version
-    ui->centralWidget->setLayout(new QHBoxLayout(ui->centralWidget));
-    ui->centralWidget->layout()->addWidget(
-        new QLabel(
-            QString::fromStdString(
-                "API version: {}"_format(api::version()))));
+    setupUi();
+    setupActions();
 }   // end constructor
 
 MainWindow::~MainWindow()

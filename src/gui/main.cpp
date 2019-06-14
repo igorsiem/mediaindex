@@ -60,8 +60,9 @@ int main(int argc, char *argv[])
                 logging::level_t::info
                 , L"API version {}"_format(api::wversion()));
 
+            QSettings settings("Igor Siemienowicz", "MediaIndex");
             QApplication a(argc, argv);
-            MainWindow w;
+            MainWindow w(settings);
             w.show();
 
             result = a.exec();
