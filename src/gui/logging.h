@@ -15,6 +15,12 @@
 #ifndef _gui_logging_h_included
 #define _gui_logging_h_included
 
+/**
+ * A separate namespace for using qLib logging functionality
+ * 
+ * This namespace also includes a few adapters for using logging with
+ * Qt classes (e.g. `QString`).
+ */
 namespace logging {
 
 /**
@@ -32,15 +38,35 @@ using level_t = qlib::logger::level_t;
  */
 inline qlib::logger& logger(void) { return qlib::logger::instance(); }
 
+/**
+ * \brief Log a debug message
+ * 
+ * \param msg The message to log
+ */
 inline void debug(QString msg)
     { logger().log(level_t::debug, msg.toStdWString()); }
 
+/**
+ * \brief Log an information message
+ * 
+ * \param msg The message to log
+ */
 inline void info(QString msg)
     { logger().log(level_t::info, msg.toStdWString()); }
 
+/**
+ * \brief Log a warning message
+ * 
+ * \param msg The message to log
+ */
 inline void warning(QString msg)
     { logger().log(level_t::warning, msg.toStdWString()); }
 
+/**
+ * \brief Log an error message
+ * 
+ * \param msg The message to log
+ */
 inline void error(QString msg)
     { logger().log(level_t::error, msg.toStdWString()); }
 

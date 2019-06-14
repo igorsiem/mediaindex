@@ -34,7 +34,6 @@ void MainWindow::executeFileOpenRootFolderAction(void)
 
             Error(tr("this functionality is not complete yet")).raise();
         }
-        
     }
     ACTION_CATCH_DURING("Opening Root Folder");
 }   // end executeFileOpenRootFolderAction method

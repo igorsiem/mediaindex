@@ -17,7 +17,10 @@
 #include "logging.h"
 
 #ifndef _gui_error_h_included
+
+/// \cond
 #define _gui_error_h_included
+/// \endcond
 
 /**
  * \brief An exception base-class for use as an error base-class at the GUI
