@@ -9,6 +9,8 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
+#include <QPixmap>
+
 #include "../mainwindow.h"
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -39,3 +41,11 @@ void MainWindow::handleSelectedDirectoryChanged(QString newSelectedDirectory)
     
     saveSelectedDirectoryPath(newSelectedDirectory);
 }   // end handleSelectedDirectoryChanged method
+
+void MainWindow::handleFileSelected(QString filePath)
+{
+    logging::debug("selected file: " + filePath);
+
+
+    m_imageLbl->setPixmap(QPixmap(filePath));
+}   // end handleFileSelected

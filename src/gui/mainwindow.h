@@ -13,6 +13,7 @@
 #define _gui_mainwindow_h_installed
 
 #include <QFileSystemModel>
+#include <QLabel>
 #include <QListView>
 #include <QMainWindow>
 #include <QSettings>
@@ -109,6 +110,13 @@ class MainWindow : public QMainWindow
      */
     void selectedDirectoryChanged(QString newSelectedDirectory);
 
+    /**
+     * \brief Signal that a file has been selected for viewing
+     * 
+     * \param selectedFilePath The path of the selected file
+     */
+    void fileSelected(QString selectedFilePath);
+
     // --- Internal Declarations ---
 
     protected:
@@ -133,10 +141,28 @@ class MainWindow : public QMainWindow
      * changed
      * 
      * This includes updating the folder tree / model objects.
+     * 
+     * \param newRootDirectory The path of the directory that was selected
+     * as the root
      */
     void handleRootDirectoryChanged(QString newRootDirectory);
 
+    /**
+     * \brief Perform display and update actions in response to the selected
+     * directory changing
+     * 
+     * \param newSelectedDirectory The path of the directory that was
+     * selected
+     */
     void handleSelectedDirectoryChanged(QString newSelectedDirectory);
+
+    /**
+     * \brief Perform display and update actions in response to a file
+     * being selected
+     * 
+     * \param filePath The path of the selected file
+     */
+    void handleFileSelected(QString filePath);
 
     private:
 
@@ -179,6 +205,16 @@ class MainWindow : public QMainWindow
      * This method is called once during construction.
      */
     void setupFolderTreeView(void);
+
+    /**
+     * \brief Create the vertical splitter between the Files List View and
+     * the Image Display Label
+     * 
+     * \return A pointer to the splitter object; note that this is not
+     * retained as an attribute of the `MainWindow` object because it is
+     * not referenced after construction
+     */
+    QSplitter* createTopBottomSplitter(void);
 
     /**
      * \brief Set up the `m_filesLstVw` and `m_filesMdl` objects that manage
@@ -282,6 +318,7 @@ class MainWindow : public QMainWindow
     QFileSystemModel* m_foldersMdl; ///< The data model for folders
     QListView* m_filesLstVw;        ///< List view for media files
     QFileSystemModel* m_filesMdl;   ///< Data model for media files
+    QLabel* m_imageLbl;             ///< Label for displaying selected image
 
 };  // end MainWindow class
 

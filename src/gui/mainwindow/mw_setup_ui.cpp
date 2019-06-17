@@ -35,15 +35,13 @@ void MainWindow::setupCentralWidget(void)
 
 QSplitter* MainWindow::createLeftRightSplitter(void)
 {
-
-    // Set up the folder tree and file list view - their component objects
-    // are retained as attributes of the `MainWindow`
+    // Set up the folder tree its component objects are retained as
+    // attributes of the `MainWindow`
     setupFolderTreeView();
-    setupFileListView();
 
-    auto leftRightSplt = new QSplitter(this);
+    auto leftRightSplt = new QSplitter(Qt::Horizontal, this);
     leftRightSplt->addWidget(m_foldersTrVw);
-    leftRightSplt->addWidget(m_filesLstVw);
+    leftRightSplt->addWidget(createTopBottomSplitter());
 
     // Get splitter component sizes from persistent storage, and ensure that
     // they are saved there when the sizes change.
@@ -68,7 +66,6 @@ QSplitter* MainWindow::createLeftRightSplitter(void)
         });
 
     return leftRightSplt;
-
 }   // end createLeftRightSplitter method
 
 void MainWindow::setupFolderTreeView(void)
@@ -116,6 +113,43 @@ void MainWindow::setupFolderTreeView(void)
 
 }   // end setupFolderTree method
 
+QSplitter* MainWindow::createTopBottomSplitter(void)
+{
+    // Set up the file list view - its component objects are retained as
+    // attributes of the `MainWindow`
+    setupFileListView();
+
+    m_imageLbl = new QLabel();
+
+    auto topBottomSplt = new QSplitter(Qt::Vertical, this);
+    topBottomSplt->addWidget(m_filesLstVw);
+    topBottomSplt->addWidget(m_imageLbl);
+
+    // Get splitter component sizes from persistent storage, and ensure that
+    // they are saved there when the sizes change.
+    m_settings.beginGroup("MainWindow");    
+    auto topSize = m_settings.value("topBottomSplitterTop", 100).toInt()
+        , bottomSize =
+            m_settings.value("topBottomSplitterBottom", 100).toInt();
+    m_settings.endGroup();
+
+    topBottomSplt->setSizes(QList<int>({topSize, bottomSize }));
+
+    connect(
+        topBottomSplt
+        , &QSplitter::splitterMoved
+        , [this, topBottomSplt](int, int)
+        {
+            auto sizes = topBottomSplt->sizes();
+            m_settings.beginGroup("MainWindow");
+            m_settings.setValue("topBottomSplitterTop", sizes[0]);
+            m_settings.setValue("topBottomSplitterBottom", sizes[1]);
+            m_settings.endGroup();
+        });
+
+    return topBottomSplt;
+}   // end createTopBottomSplitter method
+
 void MainWindow::setupFileListView(void)
 {
     m_filesLstVw = new QListView();
@@ -147,8 +181,7 @@ void MainWindow::setupFileListView(void)
         , &QItemSelectionModel::currentChanged
         , [this](const QModelIndex& current, const QModelIndex& previous)
         {
-            logging::debug(
-                "selected file: " + m_filesMdl->filePath(current));
+            emit fileSelected(m_filesMdl->filePath(current));
         });
 
     handleSelectedDirectoryChanged(selectedDirectoryPath());
