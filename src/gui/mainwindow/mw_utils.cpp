@@ -70,3 +70,13 @@ void MainWindow::saveSelectedDirectoryPath(QString p)
     m_settings.setValue("selectedDirectoryPath", p);
     m_settings.endGroup();
 }   // end saveSelectedDirectoryPath method
+
+void MainWindow::redisplayFile()
+{
+    if (!m_displayedFilePath.isEmpty())
+        m_imageLbl->setPixmap(QPixmap(m_displayedFilePath).scaled(
+            m_imageLbl->width()
+            , m_imageLbl->height()
+            , Qt::KeepAspectRatio
+            , Qt::SmoothTransformation));
+}   // end displayImageScaled

@@ -29,6 +29,7 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     , m_filesLstVw(nullptr)
     , m_filesMdl(nullptr)
     , m_imageLbl(nullptr)
+    , m_displayedFilePath()
 {
     setupUi();
     setupActions();

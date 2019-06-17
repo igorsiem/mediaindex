@@ -46,6 +46,7 @@ void MainWindow::handleFileSelected(QString filePath)
 {
     logging::debug("selected file: " + filePath);
 
+    m_displayedFilePath = filePath;
+    redisplayFile();
 
-    m_imageLbl->setPixmap(QPixmap(filePath));
 }   // end handleFileSelected

@@ -36,6 +36,10 @@ namespace Ui {
  * has been broken up across several `.cpp` files. Apart from the
  * `mainwindow.cpp`, the rest of these are found in the `src/mainwindow`
  * folder.
+ * 
+ * \todo Expand documentation for the class to include notes about
+ * setup of the User Interface, and use of the signals / slots / event
+ * handling framework
  */
 class MainWindow : public QMainWindow
 {
@@ -299,6 +303,14 @@ class MainWindow : public QMainWindow
      */
     void saveSelectedDirectoryPath(QString p);
 
+    /**
+     * \brief Display the file referenced by `m_displayedFilePath`, scaled
+     * to the display label
+     * 
+     * \todo Expand this functionality for other file types
+     */
+    void redisplayFile(void);
+
     // -- Attributes --
 
     /**
@@ -319,6 +331,7 @@ class MainWindow : public QMainWindow
     QListView* m_filesLstVw;        ///< List view for media files
     QFileSystemModel* m_filesMdl;   ///< Data model for media files
     QLabel* m_imageLbl;             ///< Label for displaying selected image
+    QString m_displayedFilePath;    ///< Path of currently displayed file
 
 };  // end MainWindow class
 

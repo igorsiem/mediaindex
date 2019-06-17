@@ -120,6 +120,8 @@ QSplitter* MainWindow::createTopBottomSplitter(void)
     setupFileListView();
 
     m_imageLbl = new QLabel();
+///    m_imageLbl->setScaledContents(true);
+    m_imageLbl->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     auto topBottomSplt = new QSplitter(Qt::Vertical, this);
     topBottomSplt->addWidget(m_filesLstVw);
@@ -144,7 +146,9 @@ QSplitter* MainWindow::createTopBottomSplitter(void)
             m_settings.beginGroup("MainWindow");
             m_settings.setValue("topBottomSplitterTop", sizes[0]);
             m_settings.setValue("topBottomSplitterBottom", sizes[1]);
-            m_settings.endGroup();
+            m_settings.endGroup();   
+
+            redisplayFile();        
         });
 
     return topBottomSplt;
