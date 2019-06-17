@@ -10,6 +10,7 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
+#include <QAbstractItemView>
 #include <QFrame>
 #include <QVBoxLayout>
 
@@ -35,18 +36,14 @@ void MainWindow::setupCentralWidget(void)
 QSplitter* MainWindow::createLeftRightSplitter(void)
 {
 
-    // Set up the folder tree - its component objects are retained as
-    // attributes of the `MainWindow`
-    setupFolderTree();
-
-    // A temporary frame for the right-hand side, until we sort out what's
-    // going on there.
-    auto rightFrm = new QFrame(this);
-    rightFrm->setFrameStyle(QFrame::Box);  
+    // Set up the folder tree and file list view - their component objects
+    // are retained as attributes of the `MainWindow`
+    setupFolderTreeView();
+    setupFileListView();
 
     auto leftRightSplt = new QSplitter(this);
     leftRightSplt->addWidget(m_foldersTrVw);
-    leftRightSplt->addWidget(rightFrm);
+    leftRightSplt->addWidget(m_filesLstVw);
 
     // Get splitter component sizes from persistent storage, and ensure that
     // they are saved there when the sizes change.
@@ -74,12 +71,23 @@ QSplitter* MainWindow::createLeftRightSplitter(void)
 
 }   // end createLeftRightSplitter method
 
-void MainWindow::setupFolderTree(void)
+void MainWindow::setupFolderTreeView(void)
 {
     m_foldersTrVw = new QTreeView();
 
     m_foldersMdl = new QFileSystemModel();
     m_foldersTrVw->setModel(m_foldersMdl);
+
+    // Use root directory from last time, but make sure it still exists
+    QString oldRootPath = rootDirectoryPath();
+    QDir root(oldRootPath);
+    if (!root.exists())
+    {
+        saveRootDirectoryPath(QDir::rootPath());
+
+        logging::info("using root \"" + rootDirectoryPath() + "\" because "
+            "previous root (\"" + oldRootPath + "\") does not exist");
+    }
 
     logging::info("using root folder: " + rootDirectoryPath());
 
@@ -90,5 +98,58 @@ void MainWindow::setupFolderTree(void)
     m_foldersTrVw->setColumnHidden(2, true);
     m_foldersTrVw->setColumnHidden(3, true);
 
+    connect(
+        m_foldersTrVw->selectionModel()
+        , &QItemSelectionModel::currentChanged
+        , [this](const QModelIndex& current, const QModelIndex& previous)
+        { 
+            emit selectedDirectoryChanged(m_foldersMdl->filePath(current));
+        });
+
     handleRootDirectoryChanged(rootDirectoryPath());
+
+    // Make sure that the tree view has the last selected path selected
+    m_foldersTrVw->selectionModel()->setCurrentIndex(
+        m_foldersMdl->index(
+            selectedDirectoryPath())
+            , QItemSelectionModel::Select);
+
 }   // end setupFolderTree method
+
+void MainWindow::setupFileListView(void)
+{
+    m_filesLstVw = new QListView();
+
+    m_filesMdl = new QFileSystemModel();
+    m_filesLstVw->setModel(m_filesMdl);
+
+    // Use selected directory from last time. If it doesn't exist, we use the
+    // root directory as selected directory (which has already been checked).
+    QString oldSelDirPath = selectedDirectoryPath();
+    QDir selDir(oldSelDirPath);
+    if (!selDir.exists())
+    {
+        saveSelectedDirectoryPath(rootDirectoryPath());
+
+        logging::info("using root directory path \"" + rootDirectoryPath()
+            + "\" as selected directory path, because previous selected "
+            "directory path (\"" + oldSelDirPath + "\") does not not exist");
+    }
+
+    logging::info("selected directory path: " + selectedDirectoryPath());
+
+    m_filesMdl->setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    
+    m_filesLstVw->setViewMode(QListView::IconMode);
+
+    connect(
+        m_filesLstVw->selectionModel()
+        , &QItemSelectionModel::currentChanged
+        , [this](const QModelIndex& current, const QModelIndex& previous)
+        {
+            logging::debug(
+                "selected file: " + m_filesMdl->filePath(current));
+        });
+
+    handleSelectedDirectoryChanged(selectedDirectoryPath());
+}   // end setupFileListView method

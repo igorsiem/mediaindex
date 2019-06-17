@@ -24,3 +24,18 @@ void MainWindow::handleRootDirectoryChanged(QString newRootDirectory)
 
     // m_foldersTrVw->expandAll();
 }   // end handleRootDirectoryChanged method
+
+void MainWindow::handleSelectedDirectoryChanged(QString newSelectedDirectory)
+{
+    logging::debug("selected directory is now: " + newSelectedDirectory);
+    if (m_filesMdl)
+    {
+        m_filesMdl->setRootPath(newSelectedDirectory);
+
+        if (m_filesLstVw)
+            m_filesLstVw->setRootIndex(
+                m_filesMdl->index(newSelectedDirectory));
+    }
+    
+    saveSelectedDirectoryPath(newSelectedDirectory);
+}   // end handleSelectedDirectoryChanged method

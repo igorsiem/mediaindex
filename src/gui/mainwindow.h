@@ -13,6 +13,7 @@
 #define _gui_mainwindow_h_installed
 
 #include <QFileSystemModel>
+#include <QListView>
 #include <QMainWindow>
 #include <QSettings>
 #include <QSplitter>
@@ -96,8 +97,17 @@ class MainWindow : public QMainWindow
 
     /**
      * \brief Notify that the root folder has been changed
+     * 
+     * \param newRootDirectory The path to the new root directory
      */
-    void rootDirectoryChanged(QString newRootDirectory);    
+    void rootDirectoryChanged(QString newRootDirectory);
+
+    /**
+     * \brief Notify that the directory selected for viewing has changed
+     * 
+     * \param newSelectedDirectory The new folder selection
+     */
+    void selectedDirectoryChanged(QString newSelectedDirectory);
 
     // --- Internal Declarations ---
 
@@ -125,6 +135,8 @@ class MainWindow : public QMainWindow
      * This includes updating the folder tree / model objects.
      */
     void handleRootDirectoryChanged(QString newRootDirectory);
+
+    void handleSelectedDirectoryChanged(QString newSelectedDirectory);
 
     private:
 
@@ -166,7 +178,15 @@ class MainWindow : public QMainWindow
      * 
      * This method is called once during construction.
      */
-    void setupFolderTree(void);
+    void setupFolderTreeView(void);
+
+    /**
+     * \brief Set up the `m_filesLstVw` and `m_filesMdl` objects that manage
+     * the files displayed for the currently selected folder
+     * 
+     * This method is called once during construction.
+     */
+    void setupFileListView(void);
 
     // -- Actions Setup --
     //
@@ -225,9 +245,23 @@ class MainWindow : public QMainWindow
      * \brief Record the root directory path for the index in persistent
      * settings storage
      * 
+     * Note that this method does not update the UI.
+     * 
      * \param p The path to set
      */
     void saveRootDirectoryPath(QString p);
+
+    /**
+     * \brief Retrieve the path of the most recently selected directory from
+     * persistent storage
+     */
+    QString selectedDirectoryPath(void) const;
+
+    /**
+     * \brief Save the path of the most recently selected directory from
+     * persistent storage
+     */
+    void saveSelectedDirectoryPath(QString p);
 
     // -- Attributes --
 
@@ -246,6 +280,8 @@ class MainWindow : public QMainWindow
 
     QTreeView* m_foldersTrVw;       ///< The tree view for folders
     QFileSystemModel* m_foldersMdl; ///< The data model for folders
+    QListView* m_filesLstVw;        ///< List view for media files
+    QFileSystemModel* m_filesMdl;   ///< Data model for media files
 
 };  // end MainWindow class
 

@@ -26,6 +26,8 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     , m_settings(settings)
     , m_foldersTrVw(nullptr)
     , m_foldersMdl(nullptr)
+    , m_filesLstVw(nullptr)
+    , m_filesMdl(nullptr)
 {
     setupUi();
     setupActions();
@@ -36,6 +38,12 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
         , &MainWindow::rootDirectoryChanged
         , this
         , &MainWindow::handleRootDirectoryChanged);
+
+    connect(
+        this
+        , &MainWindow::selectedDirectoryChanged
+        , this
+        , &MainWindow::handleSelectedDirectoryChanged);
 }   // end constructor
 
 MainWindow::~MainWindow()

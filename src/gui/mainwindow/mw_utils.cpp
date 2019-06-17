@@ -45,3 +45,28 @@ void MainWindow::saveRootDirectoryPath(QString p)
     m_settings.setValue("rootDirectoryPath", p);
     m_settings.endGroup();
 }   // end setRootDirectoryPath method
+
+QString MainWindow::selectedDirectoryPath(void) const
+{
+    QString rootDirPath = rootDirectoryPath();
+    
+    m_settings.beginGroup("Directories");
+    auto p = m_settings.value(
+        "selectedDirectoryPath"
+        , rootDirPath).toString();
+    m_settings.endGroup();
+
+    logging::debug("retrieved \"selectedDirectoryPath\" = \"" + p + "\"");
+
+    return p;
+
+}   // end selectedDirectoryPath method
+
+void MainWindow::saveSelectedDirectoryPath(QString p)
+{
+    logging::debug("saving \"selectedDirectoryPath\" = \"" + p + "\"");
+
+    m_settings.beginGroup("Directories");
+    m_settings.setValue("selectedDirectoryPath", p);
+    m_settings.endGroup();
+}   // end saveSelectedDirectoryPath method
