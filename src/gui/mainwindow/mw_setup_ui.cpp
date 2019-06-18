@@ -183,6 +183,9 @@ void MainWindow::setupFileListView(void)
     logging::info("selected directory path: " + selectedDirectoryPath());
 
     m_filesLstVw->setViewMode(QListView::IconMode);
+    m_filesLstVw->setGridSize(QSize(200, 200));
+    m_filesLstVw->setIconSize(QSize(150, 150));
+    m_filesLstVw->setWordWrap(true);
 
     connect(
         m_filesLstVw->selectionModel()
