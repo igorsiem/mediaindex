@@ -25,6 +25,7 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     , ui(new Ui::MainWindow)
     , m_settings(settings)
     , m_foldersTrVw(nullptr)
+    , m_realFilesMdl(nullptr)
     , m_foldersMdl(nullptr)
     , m_filesLstVw(nullptr)
     , m_filesMdl(nullptr)

@@ -23,8 +23,6 @@ void MainWindow::handleRootDirectoryChanged(QString newRootDirectory)
 {
     m_foldersMdl->setRootPath(newRootDirectory);
     m_foldersTrVw->setRootIndex(m_foldersMdl->index(newRootDirectory));
-
-    // m_foldersTrVw->expandAll();
 }   // end handleRootDirectoryChanged method
 
 void MainWindow::handleSelectedDirectoryChanged(QString newSelectedDirectory)
@@ -32,14 +30,19 @@ void MainWindow::handleSelectedDirectoryChanged(QString newSelectedDirectory)
     logging::debug("selected directory is now: " + newSelectedDirectory);
     if (m_filesMdl)
     {
-        m_filesMdl->setRootPath(newSelectedDirectory);
+        m_realFilesMdl->setRootPath(newSelectedDirectory);
 
         if (m_filesLstVw)
             m_filesLstVw->setRootIndex(
-                m_filesMdl->index(newSelectedDirectory));
+                m_filesMdl->mapFromSource(
+                    m_realFilesMdl->index(newSelectedDirectory)));
     }
     
     saveSelectedDirectoryPath(newSelectedDirectory);
+
+    // Clear the icon map of the files model proxy - they apply to the old
+    // directory.
+    m_filesMdl->clearIconMap();
 }   // end handleSelectedDirectoryChanged method
 
 void MainWindow::handleFileSelected(QString filePath)

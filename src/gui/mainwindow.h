@@ -9,9 +9,6 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
-#ifndef _gui_mainwindow_h_installed
-#define _gui_mainwindow_h_installed
-
 #include <QFileSystemModel>
 #include <QLabel>
 #include <QListView>
@@ -21,6 +18,10 @@
 #include <QTreeView>
 
 #include "error.h"
+#include "iconproxymodel.h"
+
+#ifndef _gui_mainwindow_h_installed
+#define _gui_mainwindow_h_installed
 
 /**
  * Qt framework generated user interface classes
@@ -329,7 +330,8 @@ class MainWindow : public QMainWindow
     QTreeView* m_foldersTrVw;       ///< The tree view for folders
     QFileSystemModel* m_foldersMdl; ///< The data model for folders
     QListView* m_filesLstVw;        ///< List view for media files
-    QFileSystemModel* m_filesMdl;   ///< Data model for media files
+    QFileSystemModel* m_realFilesMdl;   ///< Data model for media files
+    IconProxyModel* m_filesMdl;     ///< Proxy for generating icons for files
     QLabel* m_imageLbl;             ///< Label for displaying selected image
     QString m_displayedFilePath;    ///< Path of currently displayed file
 

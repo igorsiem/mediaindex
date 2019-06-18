@@ -120,7 +120,6 @@ QSplitter* MainWindow::createTopBottomSplitter(void)
     setupFileListView();
 
     m_imageLbl = new QLabel();
-///    m_imageLbl->setScaledContents(true);
     m_imageLbl->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     auto topBottomSplt = new QSplitter(Qt::Vertical, this);
@@ -158,7 +157,14 @@ void MainWindow::setupFileListView(void)
 {
     m_filesLstVw = new QListView();
 
-    m_filesMdl = new QFileSystemModel();
+    // Set up the file model and its proxy
+    m_realFilesMdl = new QFileSystemModel(this);
+    m_realFilesMdl->setFilter(QDir::Files | QDir::NoDotAndDotDot);
+
+    m_filesMdl = new IconProxyModel(this);
+    
+    m_filesMdl->setSourceModel(m_realFilesMdl);
+
     m_filesLstVw->setModel(m_filesMdl);
 
     // Use selected directory from last time. If it doesn't exist, we use the
@@ -176,8 +182,6 @@ void MainWindow::setupFileListView(void)
 
     logging::info("selected directory path: " + selectedDirectoryPath());
 
-    m_filesMdl->setFilter(QDir::Files | QDir::NoDotAndDotDot);
-    
     m_filesLstVw->setViewMode(QListView::IconMode);
 
     connect(
@@ -185,7 +189,7 @@ void MainWindow::setupFileListView(void)
         , &QItemSelectionModel::currentChanged
         , [this](const QModelIndex& current, const QModelIndex& previous)
         {
-            emit fileSelected(m_filesMdl->filePath(current));
+            emit fileSelected(m_realFilesMdl->filePath(current));
         });
 
     handleSelectedDirectoryChanged(selectedDirectoryPath());
