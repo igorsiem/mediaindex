@@ -33,14 +33,46 @@ namespace Ui {
 /**
  * \brief The main window of the application
  * 
- * For clarity and general code-tidyness, the implementation of this class
- * has been broken up across several `.cpp` files. Apart from the
- * `mainwindow.cpp`, the rest of these are found in the `src/mainwindow`
- * folder.
+ * \par Setup
+ * As with most Qt widgets, GUI setup is invoked from the constructor. This
+ * calls two major methods:
  * 
- * \todo Expand documentation for the class to include notes about
- * setup of the User Interface, and use of the signals / slots / event
- * handling framework
+ * * `setupUi` -- instantiates the various widget objects
+ * 
+ * * `setupActions` -- sets up the action objects along with the menu and
+ *   toolbar
+ * 
+ * Where possible, UI widgets are created anonymously, relying on the Qt
+ * object hierarchy to manage deletion safely. Only widget objects that need
+ * to be referenced after creation are retained as pointer attributes of the
+ * `MainWindow` object.
+ * 
+ * The `MainWindow` constructor also performs some internal signal / slot
+ * connections after the initial setup.
+ * 
+ * \par Conventions
+ * Within the `MainWindow` class, several coding conventions are observed for
+ * consistency:
+ * 
+ * * Slots are treated very much like event handlers, and slot method names
+ *   are prefixed with the word "handle"
+ * 
+ * * In the hierarchy of setup methods, the prefix "setup" is used for
+ *   methods that instantiate widget pointer attributes, but `create` is
+ *   used to prefix methods that return a pointer to a newly created object
+ *   that will be inserted into the object hierarchy, but *not* retained as
+ *   an attribute
+ * 
+ * * The word "execute" is used to prefix the names of methods that implement
+ *   Actions. The general approach is to instantiate a `QAction` object for
+ *   every entry in the menu or toolbar, and then connect this with a C++
+ *   lamda function that invokes the `execute*` methods
+ * 
+ * \par Implementation Files
+ * This class is rather large. For clarity and general code-tidyness, method
+ * implementations of this class have been broken up across several `.cpp`
+ * files. Apart from the `mainwindow.cpp`, the rest of these are found in the
+ * `src/gui/mainwindow` folder.
  */
 class MainWindow : public QMainWindow
 {
@@ -52,6 +84,9 @@ class MainWindow : public QMainWindow
 
     /**
      * \brief Error exception for signalling errors related to this class
+     * 
+     * See the \ref error_handling page for more info about error-handling
+     * in *MediaIndex*.
      */
     class Error : public ::Error
     {

@@ -15,6 +15,15 @@
 #define _gui_config_h_included
 
 /**
+ * \page configuration Configuration
+ * 
+ * *MediaIndex* uses the `Boost.ProgramOptions` library to parse and manage
+ * command-line options and configuration. Persistent user settings are
+ * managed using a `QSettings` object that is instantiated in the `main`
+ * method, and passed around to any other component that needs it.
+ */
+
+/**
  * \brief Alias for the `boost` namespace
  */
 namespace bst {

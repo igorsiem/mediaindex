@@ -86,3 +86,26 @@ int main(int argc, char *argv[])
     return result;
 
 }   // end main function
+
+/**
+ * \mainpage
+ * 
+ * *MediaIndex* is a GUI-based consumer application for browsing, viewing and
+ * indexing various types of media. These pages are the low-level
+ * documentation for various code entities in the application.
+ * 
+ * \par Overview of Codebase
+ * The *MediaIndex* codebase is divided into two main sections:
+ * 
+ * * `src/gui` -- the GUI application code, based on Qt
+ * 
+ * * `src/api` -- A lower-level Application Programming Interface - see the
+ *   \ref api page for more information
+ * 
+ * \par Notable Classes
+ * 
+ * * `MainWindow` -- Contains most of the application logic for now
+ * 
+ * * `::Error` -- base class for error-signalling exceptions (see the
+ *   \ref error_handling page for more information)
+ */

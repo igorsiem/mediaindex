@@ -16,6 +16,18 @@
 
 #include "logging.h"
 
+/**
+ * \page error_handling Error Handling
+ * 
+ * All error conditions are signalled by throwing an object of a class
+ * derived from `::Error` as an exception. In general, exceptions are caught
+ * in methods that implement a direct response to a User action (e.g. a
+ * command implementation, or an event-handler).
+ * 
+ * All exceptions are caught, logged, and displayed with a human-readable
+ * message.
+ */
+
 #ifndef _gui_error_h_included
 
 /// \cond
@@ -25,6 +37,13 @@
 /**
  * \brief An exception base-class for use as an error base-class at the GUI
  * level
+ * 
+ * This is intended as a simple error signal with a human-readable message.
+ * Most other major classes will have a nested sub-class of this class (e.g.
+ * `MainWindow::Error`).
+ * 
+ * See the \ref error_handling page for more details about the general
+ * error-handling philosophy in this application.
  */
 class Error : public QException
 {
