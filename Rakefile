@@ -9,7 +9,7 @@
 
 $project_name = "mediaindex"
 $project_version = "0.1"
-$project_description = "Stub implementation of Qt-based windowing app"
+$project_description = "Simple media-browsing and indexing application"
 
 # --- End Config ---
 

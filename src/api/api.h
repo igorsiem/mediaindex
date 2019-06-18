@@ -15,6 +15,13 @@
 #define _api_api_h_included
 
 /**
+ * \page api API
+ * 
+ * The API library currently contains no working functionality, and is set
+ * up  for future expansion. 
+ */
+
+/**
  * Declarations for the Application Programming Interface to the core logic
  */
 namespace api {

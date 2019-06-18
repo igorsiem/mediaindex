@@ -16,6 +16,14 @@
 #define _gui_logging_h_included
 
 /**
+ * \page logging Logging
+ * 
+ * *MediaIndex* makes use of the *qLib* logging system to send log messages
+ * to the console. The intent of logging in this application is purely for
+ * debugging.
+ */
+
+/**
  * A separate namespace for using qLib logging functionality
  * 
  * This namespace also includes a few adapters for using logging with
