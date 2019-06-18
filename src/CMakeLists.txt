@@ -24,6 +24,7 @@ include_directories(
     .
     ../..
     ${CONAN_INCLUDE_DIRS_QT}/QtWidgets
+    ${CONAN_INCLUDE_DIRS_QT}/QtConcurrent
 )
 
 add_subdirectory(api)

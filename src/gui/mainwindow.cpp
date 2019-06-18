@@ -24,9 +24,35 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_settings(settings)
+    , m_foldersTrVw(nullptr)
+    , m_realFilesMdl(nullptr)
+    , m_foldersMdl(nullptr)
+    , m_filesLstVw(nullptr)
+    , m_filesMdl(nullptr)
+    , m_imageLbl(nullptr)
+    , m_displayedFilePath()
 {
     setupUi();
     setupActions();
+
+    // Internal signal / slot connections
+    connect(
+        this
+        , &MainWindow::rootDirectoryChanged
+        , this
+        , &MainWindow::handleRootDirectoryChanged);
+
+    connect(
+        this
+        , &MainWindow::selectedDirectoryChanged
+        , this
+        , &MainWindow::handleSelectedDirectoryChanged);
+
+    connect(
+        this
+        , &MainWindow::fileSelected
+        , this
+        , &MainWindow::handleFileSelected);
 }   // end constructor
 
 MainWindow::~MainWindow()

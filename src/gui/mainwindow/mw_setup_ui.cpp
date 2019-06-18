@@ -10,8 +10,8 @@
  * or copy at https://www.boost.org/LICENSE_1_0.txt
  */
 
+#include <QAbstractItemView>
 #include <QFrame>
-#include <QSplitter>
 #include <QVBoxLayout>
 
 #include "../mainwindow.h"
@@ -30,16 +30,21 @@ void MainWindow::setupUi(void)
 void MainWindow::setupCentralWidget(void)
 {
     new QVBoxLayout(centralWidget());
+    centralWidget()->layout()->addWidget(createLeftRightSplitter());
+}   // end setupCentralWidget
 
-    // Left / right frames and splitter
-    auto leftFrm = new QFrame(this), rightFrm = new QFrame(this);
-    leftFrm->setFrameStyle(QFrame::Box);
-    rightFrm->setFrameStyle(QFrame::Box);  
-    
-    auto leftRightSplt = new QSplitter(this);
-    leftRightSplt->addWidget(leftFrm);
-    leftRightSplt->addWidget(rightFrm);
+QSplitter* MainWindow::createLeftRightSplitter(void)
+{
+    // Set up the folder tree its component objects are retained as
+    // attributes of the `MainWindow`
+    setupFolderTreeView();
 
+    auto leftRightSplt = new QSplitter(Qt::Horizontal, this);
+    leftRightSplt->addWidget(m_foldersTrVw);
+    leftRightSplt->addWidget(createTopBottomSplitter());
+
+    // Get splitter component sizes from persistent storage, and ensure that
+    // they are saved there when the sizes change.
     m_settings.beginGroup("MainWindow");
     auto
         leftSize = m_settings.value("leftRightSplitterLeft", 50).toInt()
@@ -60,5 +65,135 @@ void MainWindow::setupCentralWidget(void)
             m_settings.endGroup();
         });
 
-    centralWidget()->layout()->addWidget(leftRightSplt);
-}   // end setupCentralWidget
+    return leftRightSplt;
+}   // end createLeftRightSplitter method
+
+void MainWindow::setupFolderTreeView(void)
+{
+    m_foldersTrVw = new QTreeView();
+
+    m_foldersMdl = new QFileSystemModel();
+    m_foldersTrVw->setModel(m_foldersMdl);
+
+    // Use root directory from last time, but make sure it still exists
+    QString oldRootPath = rootDirectoryPath();
+    QDir root(oldRootPath);
+    if (!root.exists())
+    {
+        saveRootDirectoryPath(QDir::rootPath());
+
+        logging::info("using root \"" + rootDirectoryPath() + "\" because "
+            "previous root (\"" + oldRootPath + "\") does not exist");
+    }
+
+    logging::info("using root folder: " + rootDirectoryPath());
+
+    m_foldersMdl->setFilter(
+        QDir::Dirs | QDir::AllDirs | QDir::NoDotAndDotDot);
+
+    m_foldersTrVw->setColumnHidden(1, true);
+    m_foldersTrVw->setColumnHidden(2, true);
+    m_foldersTrVw->setColumnHidden(3, true);
+
+    connect(
+        m_foldersTrVw->selectionModel()
+        , &QItemSelectionModel::currentChanged
+        , [this](const QModelIndex& current, const QModelIndex& previous)
+        { 
+            emit selectedDirectoryChanged(m_foldersMdl->filePath(current));
+        });
+
+    handleRootDirectoryChanged(rootDirectoryPath());
+
+    // Make sure that the tree view has the last selected path selected
+    m_foldersTrVw->selectionModel()->setCurrentIndex(
+        m_foldersMdl->index(
+            selectedDirectoryPath())
+            , QItemSelectionModel::Select);
+
+}   // end setupFolderTree method
+
+QSplitter* MainWindow::createTopBottomSplitter(void)
+{
+    // Set up the file list view - its component objects are retained as
+    // attributes of the `MainWindow`
+    setupFileListView();
+
+    m_imageLbl = new QLabel();
+    m_imageLbl->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+    auto topBottomSplt = new QSplitter(Qt::Vertical, this);
+    topBottomSplt->addWidget(m_filesLstVw);
+    topBottomSplt->addWidget(m_imageLbl);
+
+    // Get splitter component sizes from persistent storage, and ensure that
+    // they are saved there when the sizes change.
+    m_settings.beginGroup("MainWindow");    
+    auto topSize = m_settings.value("topBottomSplitterTop", 100).toInt()
+        , bottomSize =
+            m_settings.value("topBottomSplitterBottom", 100).toInt();
+    m_settings.endGroup();
+
+    topBottomSplt->setSizes(QList<int>({topSize, bottomSize }));
+
+    connect(
+        topBottomSplt
+        , &QSplitter::splitterMoved
+        , [this, topBottomSplt](int, int)
+        {
+            auto sizes = topBottomSplt->sizes();
+            m_settings.beginGroup("MainWindow");
+            m_settings.setValue("topBottomSplitterTop", sizes[0]);
+            m_settings.setValue("topBottomSplitterBottom", sizes[1]);
+            m_settings.endGroup();   
+
+            redisplayFile();        
+        });
+
+    return topBottomSplt;
+}   // end createTopBottomSplitter method
+
+void MainWindow::setupFileListView(void)
+{
+    m_filesLstVw = new QListView();
+
+    // Set up the file model and its proxy
+    m_realFilesMdl = new QFileSystemModel(this);
+    m_realFilesMdl->setFilter(QDir::Files | QDir::NoDotAndDotDot);
+
+    m_filesMdl = new IconProxyModel(this);
+    
+    m_filesMdl->setSourceModel(m_realFilesMdl);
+
+    m_filesLstVw->setModel(m_filesMdl);
+
+    // Use selected directory from last time. If it doesn't exist, we use the
+    // root directory as selected directory (which has already been checked).
+    QString oldSelDirPath = selectedDirectoryPath();
+    QDir selDir(oldSelDirPath);
+    if (!selDir.exists())
+    {
+        saveSelectedDirectoryPath(rootDirectoryPath());
+
+        logging::info("using root directory path \"" + rootDirectoryPath()
+            + "\" as selected directory path, because previous selected "
+            "directory path (\"" + oldSelDirPath + "\") does not not exist");
+    }
+
+    logging::info("selected directory path: " + selectedDirectoryPath());
+
+    m_filesLstVw->setViewMode(QListView::IconMode);
+    m_filesLstVw->setGridSize(QSize(200, 200));
+    m_filesLstVw->setIconSize(QSize(150, 150));
+    m_filesLstVw->setWordWrap(true);
+
+    connect(
+        m_filesLstVw->selectionModel()
+        , &QItemSelectionModel::currentChanged
+        , [this](const QModelIndex& current, const QModelIndex& previous)
+        {
+            emit fileSelected(m_realFilesMdl->filePath(current));
+        });
+
+    handleSelectedDirectoryChanged(selectedDirectoryPath());
+}   // end setupFileListView method
