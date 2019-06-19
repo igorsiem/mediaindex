@@ -35,6 +35,8 @@ MainWindow::MainWindow(QSettings& settings, QWidget *parent) :
     setupUi();
     setupActions();
 
+    setWindowIcon(QIcon(":/appicon128"));
+
     // Internal signal / slot connections
     connect(
         this
