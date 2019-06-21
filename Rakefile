@@ -8,14 +8,25 @@
 # --- Config ---
 
 $project_name = "mediaindex"
-$project_version = "0.1"
+$project_major_version = 0
+$project_minor_version = 1
+$project_patch_version = 0
+$project_version = "#{$project_major_version}.#{$project_minor_version}." + \
+    "#{$project_patch_version}"
 $project_description = "Simple media-browsing and indexing application"
+$project_creator = "Igor Siemienowicz"
+$project_contact = "igor@qprise.com"
 
 # --- End Config ---
 
 ENV['QPRJ_PROJECT_NAME'] = $project_name
+ENV['QPRJ_PROJECT_MAJOR_VERSION'] = "#{$project_major_version}"
+ENV['QPRJ_PROJECT_MINOR_VERSION'] = "#{$project_minor_version}"
+ENV['QPRJ_PROJECT_PATCH_VERSION'] = "#{$project_patch_version}"
 ENV['QPRJ_PROJECT_VERSION'] = $project_version
 ENV['QPRJ_PROJECT_DESCRIPTION'] = $project_description
+ENV['QPRJ_PROJECT_CREATOR'] = $project_creator
+ENV['QPRJ_PROJECT_CONTACT'] = $project_contact
 
 directory "build"
 
@@ -112,7 +123,54 @@ task :docs => "build/docs" do
     sh "doxygen"
 end
 
+desc "package installer"
+task :package => :bin do
+
+    if Rake::Win32::windows?
+        package_windows
+    else
+        package_deb
+    end
+
+end
+
 desc "build tests, run tests and build docs"
-task :all => [:bin, :test, :docs]
+task :all => [:bin, :test, :docs, :package]
 
 task :default => :all
+
+require 'pathname'
+
+def package_deb
+
+    FileUtils.mkpath('build/package/DEBIAN')
+    open('build/package/DEBIAN/control', 'w') do |f|
+        f.puts  "Package: #{$project_name}\n" \
+                "Version: #{$project_version}\n" \
+                "Section: custom\n" \
+                "Priority: optional\n" \
+                "Architecture: all\n" \
+                "Essential: no\n" \
+                "Installed-Size: 1024\n" \
+                "Maintainer: #{$project_contact}\n" \
+                "Description: #{$project_description}"
+    end
+
+    FileUtils.mkpath('build/package/usr/bin')
+    FileUtils.cp('build/bin/mediaindex-gui', 'build/package/usr/bin')
+
+    sh 'dpkg-deb -b build/package'
+
+    FileUtils.mv( \
+        'build/package.deb', \
+        "build/#{$project_name}.#{$project_version}.deb")
+
+    # TODO launcher icon
+
+    # TODO check dependencies (use docker container)
+
+end
+
+def package_windows
+    raise "windows packaging not supported yet"
+end
