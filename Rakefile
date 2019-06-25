@@ -197,5 +197,6 @@ def package_deb
 end # package_deb method
 
 def package_windows
-    raise "windows packaging not supported yet"
+    # raise "windows packaging not supported yet"
+    sh "makensis mediaindex.nsi"
 end # package_windows method
