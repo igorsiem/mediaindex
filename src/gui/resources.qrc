@@ -2,6 +2,12 @@
 reliance on additional plugins -->
 <RCC>
     <qresource>
+        <file alias="appicon1024">resources/app-icon-1024.png</file>
+        <file alias="appicon512">resources/app-icon-512.png</file>
+        <file alias="appicon256">resources/app-icon-256.png</file>
+        <file alias="appicon128">resources/app-icon-128.png</file>
+        <file alias="appicon64">resources/app-icon-64.png</file>
+        <file alias="appicon32">resources/app-icon-32.png</file>
         <file alias="folder">resources/folder.png</file>
     </qresource>
 </RCC>
